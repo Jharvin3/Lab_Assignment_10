@@ -12,46 +12,73 @@ struct Trie
 // Inserts the word to the trie structure
 void insert(struct Trie *pTrie, char *word)
 {
-  for(int i = 0; i < strlen(word); i++){
-    int index = word[i] - 'a';
-    if(pTrie->children[index] == NULL){
-      pTrie->children[index] = (struct Trie *)malloc(sizeof(struct Trie));
-      for(int j = 0; j < 26; j++){
-        pTrie->children[index]->children[j] = NULL;
-      }
-      pTrie->children[index]->count = 0;
-    }
-    pTrie = pTrie->children[index];
-  }
-  pTrie->count++;
+	struct Trie *curr = *pTrie;
+	if(curr == NULL){
+		curr = (struct Trie *)malloc(sizeof(struct Trie));
+		curr->count = 0;
+		for(int i = 0; i < 26; i++){
+			curr->children[i] = NULL;
+		}
+	}
+	for(int i = 0; i < strlen(word); i++){
+		int index = word[i] - 'a';
+		if(curr->children[index] == NULL){
+			curr->children[index] = (struct Trie *)malloc(sizeof(struct Trie));
+			curr->children[index]->count = 0;
+			for(int j = 0; j < 26; j++){
+				curr->children[index]->children[j] = NULL;
+			}
+		}
+		curr = curr->children[index];
+	}
+	curr->count++;
 }
 
 // computes the number of occurances of the word
 int numberOfOccurances(struct Trie *pTrie, char *word)
 {
-   for(int i = 0; i < strlen(word); i++){
-    int index = word[i] - 'a';
-    if(pTrie->children[index] == NULL){
-      return 0;
-    }
-     pTrie = pTrie->children[index];
+   if(pTrie == NULL){
+	   return 0;
    }
+   struct Trie *curr = pTrie;
+   for(int i = 0; i < strlen(word); i++){
+	   int index = word[i] - 'a';
+	   if(curr->children[index] == NULL){
+		   return 0;
+	   }
+	   curr = curr->children[index];
+   }
+   return curr->count;
+	
 }
 
 // deallocate the trie structure
 struct Trie *deallocateTrie(struct Trie *pTrie)
 {
+	if(pTrie == NULL){
+		return NULL;
+	}
+	for(int i = 0; i < 26; i++){
+		pTrie->children[i] = deallocate(pTrie->children[i]);
+	}
+	free(pTrie);
+	return NULL;	
 }
 
 // Initializes a trie structure
 struct Trie *createTrie()
 {
+	int numWords;
+	scanf("%d", numwords);
 }
 
 // this function will return number of words in the dictionary,
 // and read all the words in the dictionary to the structure words
 int readDictionary(char *filename, char **pInWords)
 {
+	int n;
+	FILE* ifp = fopen(filename, pInWords);
+	fscanf(ifp, "%d", &n);
 }
 
 int main(void)
